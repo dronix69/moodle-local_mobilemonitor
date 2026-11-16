@@ -1,4 +1,4 @@
-name: CI
+name: Moodle Plugin CI
 
 on:
   push:
@@ -6,176 +6,152 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+
 jobs:
-  # ─────────────────────────────────────────────
-  # 1. Lint PHP (sintaxis) — sin Moodle
-  # ─────────────────────────────────────────────
-  php-lint:
-    name: PHP Lint (syntax check)
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        php: ["8.1", "8.2", "8.3"]
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP ${{ matrix.php }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          coverage: none
-
-      - name: Check PHP syntax
-        run: find . -name "*.php" -not -path "./.git/*" -print0 | xargs -0 -P4 php -l
-
-  # ─────────────────────────────────────────────
-  # 2. Moodle Code Checker (phpcs)
-  # ─────────────────────────────────────────────
-  code-checker:
-    name: Moodle Code Checker
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup PHP 8.1
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: "8.1"
-          tools: composer
-          coverage: none
-
-      - name: Install moodle-cs
-        run: composer global require moodlehq/moodle-cs
-
-      - name: Run phpcs
-        run: |
-          ~/.composer/vendor/bin/phpcs \
-            --standard=moodle \
-            --extensions=php \
-            --ignore=**/vendor/**,**/node_modules/** \
-            .
-
-  # ─────────────────────────────────────────────
-  # 3. PHPUnit con Moodle real
-  # ─────────────────────────────────────────────
-  phpunit:
-    name: PHPUnit — Moodle ${{ matrix.moodle-branch }} / PHP ${{ matrix.php }} / ${{ matrix.db }}
-    runs-on: ubuntu-latest
-    needs: php-lint
+  # Plantilla oficial de moodlehq/moodle-plugin-ci (gha.dist.yml).
+  # No se precrea la base: moodle-plugin-ci ejecuta CREATE DATABASE y falla
+  # con ERROR 1007 si MariaDB ya dejó creada `moodle`.
+  # Matriz limitada a Moodle 4.5: $plugin->supported solo declara 2024100700.
+  test:
+    name: PHP ${{ matrix.php }} / ${{ matrix.database }}
+    runs-on: ubuntu-24.04
 
     services:
-      mariadb:
-        image: mariadb:10.11
+      postgres:
+        image: ${{ matrix.database == 'pgsql' && 'postgres:17' || '' }}
         env:
-          MARIADB_ROOT_PASSWORD: root
-          MARIADB_DATABASE: moodle
-          MARIADB_USER: moodle
-          MARIADB_PASSWORD: moodle
+          POSTGRES_USER: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+
+      mariadb:
+        image: ${{ matrix.database == 'mariadb' && 'mariadb:11' || '' }}
+        env:
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "1"
+          MYSQL_CHARACTER_SET_SERVER: utf8mb4
+          MYSQL_COLLATION_SERVER: utf8mb4_unicode_ci
         ports:
           - 3306:3306
         options: >-
           --health-cmd="healthcheck.sh --connect --innodb_initialized"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
 
     strategy:
       fail-fast: false
       matrix:
-        include:
-          # Moodle 4.5 (MOODLE_405_STABLE) + PHP 8.1
-          - moodle-branch: MOODLE_405_STABLE
-            php: "8.1"
-            db: mariadb
-          # Moodle 4.5 + PHP 8.3
-          - moodle-branch: MOODLE_405_STABLE
-            php: "8.3"
-            db: mariadb
+        php: ["8.1", "8.2", "8.3"]
+        moodle-branch: [MOODLE_405_STABLE]
+        database: [pgsql, mariadb]
 
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v6
+        with:
+          path: plugin
+          persist-credentials: false
+
       - name: Setup PHP ${{ matrix.php }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, xml, curl, gd, zip, soap
-          ini-values: max_input_vars=5000
-          coverage: xdebug
+          extensions: >-
+            mbstring, intl, xml, curl, gd, zip, soap, sodium, exif, fileinfo, tokenizer,
+            ${{ matrix.database == 'pgsql' && 'pgsql, pdo_pgsql' || 'mysqli, pdo_mysql' }}
+          ini-values: max_input_vars=5000, opcache.enable_cli=1, opcache.jit=disable
+          coverage: none
 
-      - name: Checkout plugin
-        uses: actions/checkout@v4
-        with:
-          path: local_mobilemonitor
-
-      - name: Clone moodle-plugin-ci
-        uses: actions/checkout@v4
-        with:
-          repository: moodlehq/moodle-plugin-ci
-          path: moodle-plugin-ci
-          ref: main
-
-      - name: Install moodle-plugin-ci
+      - name: Initialise moodle-plugin-ci
         run: |
-          cd moodle-plugin-ci
-          composer install
+          composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^4
+          echo "$(cd ci/bin; pwd)" >> "$GITHUB_PATH"
+          echo "$(cd ci/vendor/bin; pwd)" >> "$GITHUB_PATH"
+          sudo locale-gen en_AU.UTF-8
+          echo "NVM_DIR=$HOME/.nvm" >> "$GITHUB_ENV"
 
-      - name: Install Moodle + plugin
-        run: |
-          moodle-plugin-ci/bin/moodle-plugin-ci install \
-            --plugin ./local_mobilemonitor \
-            --db-type ${{ matrix.db }} \
-            --db-host 127.0.0.1 \
-            --db-user moodle \
-            --db-pass moodle \
-            --db-name moodle \
-            --branch ${{ matrix.moodle-branch }}
+      - name: Install Moodle and plugin
+        run: moodle-plugin-ci install --plugin ./plugin --db-host=127.0.0.1
+        env:
+          DB: ${{ matrix.database }}
+          MOODLE_BRANCH: ${{ matrix.moodle-branch }}
 
-      - name: PHPUnit
-        run: moodle-plugin-ci/bin/moodle-plugin-ci phpunit --coverage-clover coverage.xml
-        continue-on-error: false
+      - name: PHP Lint
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phplint
 
-      - name: Upload coverage to Codecov
-        if: matrix.php == '8.1' && matrix.moodle-branch == 'MOODLE_405_STABLE'
-        uses: codecov/codecov-action@v4
+      - name: PHP Mess Detector
+        continue-on-error: true
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phpmd
+
+      - name: Moodle Code Checker
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phpcs --max-warnings 0
+
+      - name: Moodle PHPDoc Checker
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phpdoc --max-warnings 0
+
+      - name: Validating
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci validate
+
+      - name: Check upgrade savepoints
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci savepoints
+
+      - name: Mustache Lint
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci mustache
+
+      - name: Grunt
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci grunt --max-lint-warnings 0
+
+      - name: PHPUnit tests
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci phpunit --fail-on-warning
+
+      - name: Behat features
+        id: behat
+        if: ${{ !cancelled() }}
+        run: moodle-plugin-ci behat --profile chrome --scss-deprecations
+
+      - name: Upload Behat Faildump
+        if: ${{ failure() && steps.behat.outcome == 'failure' }}
+        uses: actions/upload-artifact@v7
         with:
-          files: coverage.xml
-          flags: phpunit
-          fail_ci_if_error: false
+          name: Behat Faildump (${{ join(matrix.*, ', ') }})
+          path: ${{ github.workspace }}/moodledata/behat_dump
+          retention-days: 7
+          if-no-files-found: ignore
 
-  # ─────────────────────────────────────────────
-  # 4. Mustache lint
-  # ─────────────────────────────────────────────
-  mustache-lint:
-    name: Mustache templates lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+      - name: Mark cancelled jobs as failed
+        if: ${{ cancelled() }}
+        run: exit 1
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install mustache linter
-        run: npm install -g mustache
-
-      - name: Lint .mustache files
-        run: |
-          find templates -name "*.mustache" | while read f; do
-            echo "Checking: $f"
-            mustache /dev/null "$f" > /dev/null
-          done
-
-  # ─────────────────────────────────────────────
-  # 5. Crear artefacto ZIP para distribución
-  # ─────────────────────────────────────────────
   package:
     name: Build release ZIP
-    runs-on: ubuntu-latest
-    needs: [code-checker, phpunit, mustache-lint]
+    runs-on: ubuntu-24.04
+    needs: test
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: read
+      actions: write
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Get version from version.php
         id: version
@@ -189,17 +165,21 @@ jobs:
 
       - name: Build ZIP
         run: |
-          cd ..
-          zip -r local_mobilemonitor-${{ steps.version.outputs.release }}.zip \
-            local_mobilemonitor \
-            --exclude "local_mobilemonitor/.git/*" \
-            --exclude "local_mobilemonitor/.github/*" \
-            --exclude "local_mobilemonitor/instrucciones.text"
+          mkdir -p dist/mobilemonitor
+          rsync -a \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'dist' \
+            --exclude 'instrucciones.text' \
+            ./ dist/mobilemonitor/
+          (
+            cd dist
+            zip -r "../local_mobilemonitor-${{ steps.version.outputs.release }}.zip" mobilemonitor
+          )
 
       - name: Upload ZIP artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: local_mobilemonitor-${{ steps.version.outputs.release }}
-          path: ../local_mobilemonitor-${{ steps.version.outputs.release }}.zip
+          path: local_mobilemonitor-${{ steps.version.outputs.release }}.zip
           retention-days: 30
-

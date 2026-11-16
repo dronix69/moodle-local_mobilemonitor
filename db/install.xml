@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/mobilemonitor/db" VERSION="20261116" COMMENT="Audit log of Moodle Mobile web service tokens">
+  <TABLES>
+    <TABLE NAME="local_mobilemonitor_access" COMMENT="Grouped access history of the monitored mobile tokens (metadata only)">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Owner of the token"/>
+        <FIELD NAME="tokenid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Identifier of the row in {external_tokens}. It is NOT the token secret."/>
+        <FIELD NAME="externalserviceid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Identifier of the row in {external_services}"/>
+        <FIELD NAME="ipaddress" TYPE="char" LENGTH="45" NOTNULL="true" DEFAULT="" SEQUENCE="false" COMMENT="IP address of the request"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Time of the access (grouped by session/IP)"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid-timecreated" UNIQUE="false" FIELDS="userid, timecreated"/>
+        <INDEX NAME="tokenid-timecreated" UNIQUE="false" FIELDS="tokenid, timecreated"/>
+        <INDEX NAME="timecreated" UNIQUE="false" FIELDS="timecreated"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_mobilemonitor_log" COMMENT="Audit trail of mobile web service tokens (metadata only, never the token secret)">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Owner of the token (the student that generated it)"/>
+        <FIELD NAME="tokenid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Identifier of the row in {external_tokens}. It is NOT the token secret."/>
+        <FIELD NAME="externalserviceid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Identifier of the row in {external_services}"/>
+        <FIELD NAME="eventtype" TYPE="char" LENGTH="20" NOTNULL="true" DEFAULT="created" SEQUENCE="false" COMMENT="created | used | detected"/>
+        <FIELD NAME="ipaddress" TYPE="char" LENGTH="45" NOTNULL="true" DEFAULT="" SEQUENCE="false" COMMENT="IP address of the request that generated the token, when it is technically reliable"/>
+        <FIELD NAME="tokenlastaccess" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Last known access time of the token"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="tokenid-eventtype" UNIQUE="true" FIELDS="tokenid, eventtype" COMMENT="Guarantees idempotency: one row per token and event type"/>
+        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="externalserviceid" UNIQUE="false" FIELDS="externalserviceid"/>
+        <INDEX NAME="timecreated" UNIQUE="false" FIELDS="timecreated"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="local_mobilemonitor_alert" COMMENT="Alerts raised for patterns that require a human review">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="User the alert refers to"/>
+        <FIELD NAME="alerttype" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT="repetition" SEQUENCE="false"/>
+        <FIELD NAME="fingerprint" TYPE="char" LENGTH="255" NOTNULL="true" DEFAULT="" SEQUENCE="false" COMMENT="Identifier of the incident, used to avoid duplicated alerts"/>
+        <FIELD NAME="tokencount" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+        <KEY NAME="userid" TYPE="foreign" FIELDS="userid" REFTABLE="user" REFFIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid-alerttype-fingerprint" UNIQUE="true" FIELDS="userid, alerttype, fingerprint" COMMENT="One alert per incident"/>
+        <INDEX NAME="timecreated" UNIQUE="false" FIELDS="timecreated"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>

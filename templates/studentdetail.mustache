@@ -1,0 +1,166 @@
+{{!
+    Mobile activity detail of a single student.
+
+    Context:
+    - summary: fullname, username, profileurl, firsttoken, firstaccess, lastaccess,
+               tokens, activetokens, ipcount, status, statusclass
+    - hasmultipleips, hasmultipletokens: audit warnings
+    - tokens: list of {id, service, shortname, created, lastaccess, validuntil, state, stateclass, creationips}
+    - ips: list of {ipaddress, hits, firstseen, lastseen}
+    - accesses: list of {timecreated, ipaddress, service, tokenid}
+    - totalaccesses: total number of access rows
+}}
+<div class="local-mobilemonitor">
+
+    <h2 class="h4 mb-3">{{#str}} student_summary, local_mobilemonitor {{/str}}</h2>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <p class="mb-1">
+                <strong>{{summary.fullname}}</strong>
+                <span class="text-muted">({{summary.username}})</span>
+                <span class="{{summary.statusclass}}">{{summary.status}}</span>
+            </p>
+            <p class="mb-3">
+                <a href="{{summary.profileurl}}">{{#str}} viewprofile, local_mobilemonitor {{/str}}</a>
+            </p>
+
+            <div class="row g-3">
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <p class="text-muted mb-1">{{#str}} summary_firsttoken, local_mobilemonitor {{/str}}</p>
+                    <p class="mb-0" data-region="firsttoken">{{summary.firsttoken}}</p>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <p class="text-muted mb-1">{{#str}} summary_firstaccess, local_mobilemonitor {{/str}}</p>
+                    <p class="mb-0" data-region="firstaccess">{{summary.firstaccess}}</p>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <p class="text-muted mb-1">{{#str}} summary_lastaccess, local_mobilemonitor {{/str}}</p>
+                    <p class="mb-0" data-region="lastaccess">{{summary.lastaccess}}</p>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <p class="text-muted mb-1">{{#str}} summary_tokens, local_mobilemonitor {{/str}}</p>
+                    <p class="mb-0" data-region="tokens">{{summary.tokens}}</p>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <p class="text-muted mb-1">{{#str}} summary_activetokens, local_mobilemonitor {{/str}}</p>
+                    <p class="mb-0" data-region="activetokens">{{summary.activetokens}}</p>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <p class="text-muted mb-1">{{#str}} summary_ipcount, local_mobilemonitor {{/str}}</p>
+                    <p class="mb-0" data-region="ipcount">{{summary.ipcount}}</p>
+                </div>
+            </div>
+
+            {{#hasmultipleips}}
+                <p class="alert alert-warning mt-3 mb-0" role="status">{{#str}} warning_multipleips, local_mobilemonitor {{/str}}</p>
+            {{/hasmultipleips}}
+            {{#hasmultipletokens}}
+                <p class="alert alert-warning mt-3 mb-0" role="status">{{#str}} warning_multipletokens, local_mobilemonitor {{/str}}</p>
+            {{/hasmultipletokens}}
+        </div>
+    </div>
+
+    <h2 class="h4 mb-3">{{#str}} student_tokens, local_mobilemonitor {{/str}}</h2>
+
+    {{^hastokens}}
+        <p class="alert alert-info" role="status">{{#str}} notokens, local_mobilemonitor {{/str}}</p>
+    {{/hastokens}}
+
+    {{#hastokens}}
+        <div class="table-responsive mb-4">
+            <table class="table table-striped align-middle" id="local-mobilemonitor-student-tokens">
+                <caption class="visually-hidden">{{#str}} student_tokens, local_mobilemonitor {{/str}}</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">{{#str}} column_service, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_created, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_lastaccess, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_validuntil, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_creationip, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_status, local_mobilemonitor {{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#tokens}}
+                        <tr>
+                            <td>{{service}} <span class="text-muted small">({{shortname}})</span></td>
+                            <td>{{created}}</td>
+                            <td>{{lastaccess}}</td>
+                            <td>{{validuntil}}</td>
+                            <td>{{creationips}}</td>
+                            <td><span class="{{stateclass}}">{{state}}</span></td>
+                        </tr>
+                    {{/tokens}}
+                </tbody>
+            </table>
+        </div>
+    {{/hastokens}}
+
+    <h2 class="h4 mb-3">{{#str}} student_ips, local_mobilemonitor {{/str}}</h2>
+
+    {{^hasips}}
+        <p class="alert alert-info" role="status">{{#str}} noips, local_mobilemonitor {{/str}}</p>
+    {{/hasips}}
+
+    {{#hasips}}
+        <div class="table-responsive mb-4">
+            <table class="table table-striped align-middle" id="local-mobilemonitor-student-ips">
+                <caption class="visually-hidden">{{#str}} student_ips, local_mobilemonitor {{/str}}</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">{{#str}} column_ip, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_hits, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_firstseen, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_lastseen, local_mobilemonitor {{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#ips}}
+                        <tr>
+                            <td>{{ipaddress}}</td>
+                            <td>{{hits}}</td>
+                            <td>{{firstseen}}</td>
+                            <td>{{lastseen}}</td>
+                        </tr>
+                    {{/ips}}
+                </tbody>
+            </table>
+        </div>
+    {{/hasips}}
+
+    <h2 class="h4 mb-3">{{#str}} student_accesses, local_mobilemonitor {{/str}}</h2>
+
+    {{^hasaccesses}}
+        <p class="alert alert-info" role="status">{{#str}} noaccesses, local_mobilemonitor {{/str}}</p>
+    {{/hasaccesses}}
+
+    {{#hasaccesses}}
+        <p class="text-muted">{{#str}} accesses_total, local_mobilemonitor, {{totalaccesses}} {{/str}}</p>
+
+        <div class="table-responsive">
+            <table class="table table-striped align-middle" id="local-mobilemonitor-student-accesses">
+                <caption class="visually-hidden">{{#str}} student_accesses, local_mobilemonitor {{/str}}</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">{{#str}} column_time, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_ip, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_service, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_tokenid, local_mobilemonitor {{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#accesses}}
+                        <tr>
+                            <td>{{timecreated}}</td>
+                            <td>{{ipaddress}}</td>
+                            <td>{{service}}</td>
+                            <td>{{tokenid}}</td>
+                        </tr>
+                    {{/accesses}}
+                </tbody>
+            </table>
+        </div>
+    {{/hasaccesses}}
+
+</div>

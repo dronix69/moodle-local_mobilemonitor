@@ -1,0 +1,15 @@
+/* Styles of the Mobile Token Monitor plugin. */
+
+.local-mobilemonitor .card {
+    border: 1px solid var(--bs-border-color, rgba(0, 0, 0, 0.125));
+}
+
+.local-mobilemonitor table th {
+    white-space: nowrap;
+}
+
+@media (max-width: 576px) {
+    .local-mobilemonitor .table-responsive {
+        font-size: 0.875rem;
+    }
+}

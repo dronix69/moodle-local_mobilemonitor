@@ -1,0 +1,95 @@
+{{!
+    Audit panel of the monitored tokens.
+
+    Context:
+    - stats: total, students, last24hours, last7days, lastactivity
+    - rows: list of {id, student, username, service, created, lastaccess, ipaddress, eventtype}
+    - hasrows: whether there is at least one row
+    - hasfilters: whether any filter is applied
+}}
+<div class="local-mobilemonitor">
+
+    <h2 class="h4 mb-3">{{#str}} dashboard_stats, local_mobilemonitor {{/str}}</h2>
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">{{#str}} stat_total_tokens, local_mobilemonitor {{/str}}</p>
+                    <p class="h4 mb-0" data-region="stat-total">{{stats.total}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">{{#str}} stat_total_students, local_mobilemonitor {{/str}}</p>
+                    <p class="h4 mb-0" data-region="stat-students">{{stats.students}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">{{#str}} stat_last24hours, local_mobilemonitor {{/str}}</p>
+                    <p class="h4 mb-0" data-region="stat-last24hours">{{stats.last24hours}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-3">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">{{#str}} stat_last7days, local_mobilemonitor {{/str}}</p>
+                    <p class="h4 mb-0" data-region="stat-last7days">{{stats.last7days}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="card h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">{{#str}} stat_lastactivity, local_mobilemonitor {{/str}}</p>
+                    <p class="h6 mb-0" data-region="stat-lastactivity">{{stats.lastactivity}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="h4 mb-3">{{#str}} dashboard_events, local_mobilemonitor {{/str}}</h2>
+
+    {{^hasrows}}
+        <p class="alert alert-info" role="status">{{#str}} noevents, local_mobilemonitor {{/str}}</p>
+    {{/hasrows}}
+
+    {{#hasrows}}
+        <div class="table-responsive">
+            <table class="table table-striped align-middle" id="local-mobilemonitor-events">
+                <caption class="visually-hidden">{{#str}} dashboard_events, local_mobilemonitor {{/str}}</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">{{#str}} column_student, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_username, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_service, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_created, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_lastaccess, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_ip, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_eventtype, local_mobilemonitor {{/str}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#rows}}
+                        <tr>
+                            <td>{{student}}</td>
+                            <td>{{username}}</td>
+                            <td>{{service}}</td>
+                            <td>{{created}}</td>
+                            <td>{{lastaccess}}</td>
+                            <td>{{ipaddress}}</td>
+                            <td>{{eventtype}}</td>
+                        </tr>
+                    {{/rows}}
+                </tbody>
+            </table>
+        </div>
+    {{/hasrows}}
+
+</div>

@@ -1,0 +1,51 @@
+{{!
+    Listing of the students with mobile activity.
+
+    Context:
+    - rows: list of {userid, fullname, username, detailurl, tokens, activetokens, ipcount, firstuse, lastaccess, status, statusclass}
+    - hasrows: whether there is at least one student
+    - hasfilters: whether any filter is applied
+}}
+<div class="local-mobilemonitor">
+
+    {{^hasrows}}
+        <p class="alert alert-info" role="status">{{#str}} nostudents, local_mobilemonitor {{/str}}</p>
+    {{/hasrows}}
+
+    {{#hasrows}}
+        <div class="table-responsive">
+            <table class="table table-striped align-middle" id="local-mobilemonitor-students">
+                <caption class="visually-hidden">{{#str}} students_title, local_mobilemonitor {{/str}}</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">{{#str}} column_student, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_username, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_tokens, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_activetokens, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_ipcount, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_firstuse, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_lastaccess, local_mobilemonitor {{/str}}</th>
+                        <th scope="col">{{#str}} column_status, local_mobilemonitor {{/str}}</th>
+                        <th scope="col"><span class="visually-hidden">{{#str}} column_actions, local_mobilemonitor {{/str}}</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#rows}}
+                        <tr>
+                            <td><a href="{{detailurl}}">{{fullname}}</a></td>
+                            <td>{{username}}</td>
+                            <td>{{tokens}}</td>
+                            <td>{{activetokens}}</td>
+                            <td>{{ipcount}}</td>
+                            <td>{{firstuse}}</td>
+                            <td>{{lastaccess}}</td>
+                            <td><span class="{{statusclass}}">{{status}}</span></td>
+                            <td><a class="btn btn-sm btn-outline-primary" href="{{detailurl}}">{{#str}} viewdetail, local_mobilemonitor {{/str}}</a></td>
+                        </tr>
+                    {{/rows}}
+                </tbody>
+            </table>
+        </div>
+    {{/hasrows}}
+
+</div>

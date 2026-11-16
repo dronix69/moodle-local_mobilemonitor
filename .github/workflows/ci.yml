@@ -1,0 +1,206 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # ─────────────────────────────────────────────
+  # 1. Lint PHP (sintaxis) — sin Moodle
+  # ─────────────────────────────────────────────
+  php-lint:
+    name: PHP Lint (syntax check)
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ["8.1", "8.2", "8.3"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Check PHP syntax
+        run: find . -name "*.php" -not -path "./.git/*" -print0 | xargs -0 -P4 php -l
+
+  # ─────────────────────────────────────────────
+  # 2. Moodle Code Checker (phpcs)
+  # ─────────────────────────────────────────────
+  code-checker:
+    name: Moodle Code Checker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP 8.1
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          tools: composer
+          coverage: none
+
+      - name: Install moodle-cs
+        run: composer global require moodlehq/moodle-cs
+
+      - name: Run phpcs
+        run: |
+          ~/.composer/vendor/bin/phpcs \
+            --standard=moodle \
+            --extensions=php \
+            --ignore=**/vendor/**,**/node_modules/** \
+            .
+
+  # ─────────────────────────────────────────────
+  # 3. PHPUnit con Moodle real
+  # ─────────────────────────────────────────────
+  phpunit:
+    name: PHPUnit — Moodle ${{ matrix.moodle-branch }} / PHP ${{ matrix.php }} / ${{ matrix.db }}
+    runs-on: ubuntu-latest
+    needs: php-lint
+
+    services:
+      mariadb:
+        image: mariadb:10.11
+        env:
+          MARIADB_ROOT_PASSWORD: root
+          MARIADB_DATABASE: moodle
+          MARIADB_USER: moodle
+          MARIADB_PASSWORD: moodle
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Moodle 4.5 (MOODLE_405_STABLE) + PHP 8.1
+          - moodle-branch: MOODLE_405_STABLE
+            php: "8.1"
+            db: mariadb
+          # Moodle 4.5 + PHP 8.3
+          - moodle-branch: MOODLE_405_STABLE
+            php: "8.3"
+            db: mariadb
+
+    steps:
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl, xml, curl, gd, zip, soap
+          ini-values: max_input_vars=5000
+          coverage: xdebug
+
+      - name: Checkout plugin
+        uses: actions/checkout@v4
+        with:
+          path: local_mobilemonitor
+
+      - name: Clone moodle-plugin-ci
+        uses: actions/checkout@v4
+        with:
+          repository: moodlehq/moodle-plugin-ci
+          path: moodle-plugin-ci
+          ref: main
+
+      - name: Install moodle-plugin-ci
+        run: |
+          cd moodle-plugin-ci
+          composer install
+
+      - name: Install Moodle + plugin
+        run: |
+          moodle-plugin-ci/bin/moodle-plugin-ci install \
+            --plugin ./local_mobilemonitor \
+            --db-host 127.0.0.1 \
+            --db-user moodle \
+            --db-pass moodle \
+            --db-name moodle \
+            --moodle-branch ${{ matrix.moodle-branch }}
+        env:
+          DB: ${{ matrix.db }}
+
+      - name: PHPUnit
+        run: moodle-plugin-ci/bin/moodle-plugin-ci phpunit --coverage-clover coverage.xml
+        continue-on-error: false
+
+      - name: Upload coverage to Codecov
+        if: matrix.php == '8.1' && matrix.moodle-branch == 'MOODLE_405_STABLE'
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
+          flags: phpunit
+          fail_ci_if_error: false
+
+  # ─────────────────────────────────────────────
+  # 4. Mustache lint
+  # ─────────────────────────────────────────────
+  mustache-lint:
+    name: Mustache templates lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install mustache linter
+        run: npm install -g mustache
+
+      - name: Lint .mustache files
+        run: |
+          find templates -name "*.mustache" | while read f; do
+            echo "Checking: $f"
+            mustache /dev/null "$f" > /dev/null
+          done
+
+  # ─────────────────────────────────────────────
+  # 5. Crear artefacto ZIP para distribución
+  # ─────────────────────────────────────────────
+  package:
+    name: Build release ZIP
+    runs-on: ubuntu-latest
+    needs: [code-checker, phpunit, mustache-lint]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get version from version.php
+        id: version
+        run: |
+          VERSION=$(php -r "
+            \$plugin = new stdClass();
+            include 'version.php';
+            echo \$plugin->release;
+          ")
+          echo "release=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Build ZIP
+        run: |
+          cd ..
+          zip -r local_mobilemonitor-${{ steps.version.outputs.release }}.zip \
+            local_mobilemonitor \
+            --exclude "local_mobilemonitor/.git/*" \
+            --exclude "local_mobilemonitor/.github/*" \
+            --exclude "local_mobilemonitor/instrucciones.text"
+
+      - name: Upload ZIP artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: local_mobilemonitor-${{ steps.version.outputs.release }}
+          path: ../local_mobilemonitor-${{ steps.version.outputs.release }}.zip
+          retention-days: 30
+

@@ -1,10 +1,33 @@
 {{!
+    @template local_mobilemonitor/studentlist
+
     Listing of the students with mobile activity.
 
     Context:
     - rows: list of {userid, fullname, username, detailurl, tokens, activetokens, ipcount, firstuse, lastaccess, status, statusclass}
     - hasrows: whether there is at least one student
     - hasfilters: whether any filter is applied
+
+    Example context (json):
+    {
+        "hasrows": true,
+        "hasfilters": false,
+        "rows": [
+            {
+                "userid": 2,
+                "fullname": "Ana Perez",
+                "username": "aperez",
+                "detailurl": "https://example.com/local/mobilemonitor/student.php?id=2",
+                "tokens": 2,
+                "activetokens": 1,
+                "ipcount": 2,
+                "firstuse": "1 November 2026",
+                "lastaccess": "16 November 2026",
+                "status": "Active",
+                "statusclass": "badge text-bg-success"
+            }
+        ]
+    }
 }}
 <div class="local-mobilemonitor">
 

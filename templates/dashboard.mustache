@@ -1,4 +1,6 @@
 {{!
+    @template local_mobilemonitor/dashboard
+
     Audit panel of the monitored tokens.
 
     Context:
@@ -6,6 +8,31 @@
     - rows: list of {id, student, username, service, created, lastaccess, ipaddress, eventtype}
     - hasrows: whether there is at least one row
     - hasfilters: whether any filter is applied
+
+    Example context (json):
+    {
+        "stats": {
+            "total": 12,
+            "students": 4,
+            "last24hours": 2,
+            "last7days": 8,
+            "lastactivity": "16 November 2026, 10:00"
+        },
+        "hasrows": true,
+        "hasfilters": false,
+        "rows": [
+            {
+                "id": 1,
+                "student": "Ana Perez",
+                "username": "aperez",
+                "service": "Moodle Mobile",
+                "created": "1 November 2026",
+                "lastaccess": "16 November 2026",
+                "ipaddress": "203.0.113.10",
+                "eventtype": "Token created"
+            }
+        ]
+    }
 }}
 <div class="local-mobilemonitor">
 

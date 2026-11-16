@@ -1,14 +1,69 @@
 {{!
+    @template local_mobilemonitor/studentdetail
+
     Mobile activity detail of a single student.
 
     Context:
     - summary: fullname, username, profileurl, firsttoken, firstaccess, lastaccess,
                tokens, activetokens, ipcount, status, statusclass
     - hasmultipleips, hasmultipletokens: audit warnings
+    - hastokens, hasips, hasaccesses: whether each table has rows
     - tokens: list of {id, service, shortname, created, lastaccess, validuntil, state, stateclass, creationips}
     - ips: list of {ipaddress, hits, firstseen, lastseen}
     - accesses: list of {timecreated, ipaddress, service, tokenid}
     - totalaccesses: total number of access rows
+
+    Example context (json):
+    {
+        "summary": {
+            "fullname": "Ana Perez",
+            "username": "aperez",
+            "profileurl": "https://example.com/user/profile.php?id=2",
+            "firsttoken": "1 November 2026",
+            "firstaccess": "2 November 2026",
+            "lastaccess": "16 November 2026",
+            "tokens": 2,
+            "activetokens": 1,
+            "ipcount": 2,
+            "status": "Active",
+            "statusclass": "badge text-bg-success"
+        },
+        "hasmultipleips": true,
+        "hasmultipletokens": true,
+        "hastokens": true,
+        "tokens": [
+            {
+                "id": 7,
+                "service": "Moodle Mobile",
+                "shortname": "moodle_mobile_app",
+                "created": "1 November 2026",
+                "lastaccess": "16 November 2026",
+                "validuntil": "Never",
+                "state": "Valid",
+                "stateclass": "badge text-bg-success",
+                "creationips": "203.0.113.10"
+            }
+        ],
+        "hasips": true,
+        "ips": [
+            {
+                "ipaddress": "203.0.113.10",
+                "hits": 14,
+                "firstseen": "2 November 2026",
+                "lastseen": "16 November 2026"
+            }
+        ],
+        "hasaccesses": true,
+        "totalaccesses": 14,
+        "accesses": [
+            {
+                "timecreated": "16 November 2026, 10:00",
+                "ipaddress": "203.0.113.10",
+                "service": "Moodle Mobile",
+                "tokenid": 7
+            }
+        ]
+    }
 }}
 <div class="local-mobilemonitor">
 

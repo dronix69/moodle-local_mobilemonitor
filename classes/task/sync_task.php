@@ -18,8 +18,6 @@ namespace local_mobilemonitor\task;
 
 use local_mobilemonitor\local\helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Scheduled task that reconciles the monitored tokens with the audit log.
  *
@@ -33,7 +31,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class sync_task extends \core\task\scheduled_task {
-
     /** Maximum number of tokens processed in a single run. */
     public const BATCH_SIZE = 500;
 
@@ -68,7 +65,7 @@ class sync_task extends \core\task\scheduled_task {
             return;
         }
 
-        list($insql, $params) = $DB->get_in_or_equal($serviceids, SQL_PARAMS_NAMED, 'sid');
+        [$insql, $params] = $DB->get_in_or_equal($serviceids, SQL_PARAMS_NAMED, 'sid');
 
         $sql = "SELECT t.id, t.userid, t.externalserviceid, t.timecreated, t.lastaccess
                   FROM {external_tokens} t

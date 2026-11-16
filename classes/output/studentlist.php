@@ -18,8 +18,6 @@ namespace local_mobilemonitor\output;
 
 use local_mobilemonitor\local\helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Renderable listing of the students with mobile activity.
  *
@@ -28,14 +26,17 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class studentlist implements \renderable, \templatable {
-
     /**
+     * Constructor.
+     *
      * @param \stdClass[] $students Students with mobile activity.
      * @param bool $hasfilters Whether any filter is applied.
      */
     public function __construct(
+        /** @var \stdClass[] $students Students with mobile activity. */
         protected array $students,
-        protected bool $hasfilters
+        /** @var bool $hasfilters Whether any filter is applied. */
+        protected bool $hasfilters,
     ) {
     }
 
@@ -66,8 +67,10 @@ class studentlist implements \renderable, \templatable {
                 'userid' => (int) $student->userid,
                 'fullname' => $name,
                 'username' => (string) ($student->username ?? ''),
-                'detailurl' => (new \moodle_url('/local/mobilemonitor/student.php',
-                    ['userid' => (int) $student->userid]))->out(false),
+                'detailurl' => (new \moodle_url(
+                    '/local/mobilemonitor/student.php',
+                    ['userid' => (int) $student->userid]
+                ))->out(false),
                 'tokens' => (int) ($student->tokens ?? 0),
                 'activetokens' => (int) ($student->activetokens ?? 0),
                 'ipcount' => (int) ($student->ipcount ?? 0),

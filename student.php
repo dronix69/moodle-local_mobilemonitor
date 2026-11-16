@@ -47,10 +47,14 @@ $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('student_title', 'local_mobilemonitor', $studentname));
 $PAGE->set_heading(get_string('student_title', 'local_mobilemonitor', $studentname));
-$PAGE->navbar->add(get_string('pluginname', 'local_mobilemonitor'),
-    new moodle_url('/local/mobilemonitor/index.php'));
-$PAGE->navbar->add(get_string('students_title', 'local_mobilemonitor'),
-    new moodle_url('/local/mobilemonitor/students.php'));
+$PAGE->navbar->add(
+    get_string('pluginname', 'local_mobilemonitor'),
+    new moodle_url('/local/mobilemonitor/index.php')
+);
+$PAGE->navbar->add(
+    get_string('students_title', 'local_mobilemonitor'),
+    new moodle_url('/local/mobilemonitor/students.php')
+);
 $PAGE->navbar->add($studentname);
 
 $backurl = new moodle_url('/local/mobilemonitor/students.php');
@@ -63,8 +67,11 @@ if ($student === null) {
         'alert alert-info',
         ['role' => 'status']
     );
-    echo html_writer::link($backurl, get_string('backtostudents', 'local_mobilemonitor'),
-        ['class' => 'btn btn-secondary']);
+    echo html_writer::link(
+        $backurl,
+        get_string('backtostudents', 'local_mobilemonitor'),
+        ['class' => 'btn btn-secondary']
+    );
     echo $OUTPUT->footer();
     exit;
 }
@@ -94,8 +101,11 @@ if ($totalaccesses > $perpage) {
 }
 
 echo html_writer::div(
-    html_writer::link($backurl, get_string('backtostudents', 'local_mobilemonitor'),
-        ['class' => 'btn btn-secondary mt-3']),
+    html_writer::link(
+        $backurl,
+        get_string('backtostudents', 'local_mobilemonitor'),
+        ['class' => 'btn btn-secondary mt-3']
+    ),
     'mt-3'
 );
 

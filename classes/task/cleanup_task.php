@@ -18,8 +18,6 @@ namespace local_mobilemonitor\task;
 
 use local_mobilemonitor\local\helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Scheduled task that removes the old records of the audit log.
  *
@@ -30,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cleanup_task extends \core\task\scheduled_task {
-
     /**
      * Returns the name of the task.
      *

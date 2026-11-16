@@ -27,8 +27,6 @@ use core_privacy\local\request\transform;
 use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Privacy provider of the Mobile Token Monitor plugin.
  *
@@ -39,11 +37,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2026 Daniel Ferrada
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class provider implements
-    metadata_provider,
-    plugin_provider,
-    core_userlist_provider {
-
+class provider implements core_userlist_provider, metadata_provider, plugin_provider {
     /**
      * Describes the personal data stored by the plugin.
      *
@@ -262,7 +256,7 @@ class provider implements
             return;
         }
 
-        list($insql, $params) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'uid');
+        [$insql, $params] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED, 'uid');
         $DB->delete_records_select('local_mobilemonitor_log', "userid $insql", $params);
         $DB->delete_records_select('local_mobilemonitor_access', "userid $insql", $params);
         $DB->delete_records_select('local_mobilemonitor_alert', "userid $insql", $params);

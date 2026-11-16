@@ -25,11 +25,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
-    // -------------------------------------------------------------------------
-    // External pages (panel de auditoría y lista de estudiantes).
+    // External pages for the audit panel and the student list.
     // Registered as admin_externalpage so they appear in the admin navigation
     // tree and are accessible from Site administration > Plugins > Local plugins.
-    // -------------------------------------------------------------------------
     $ADMIN->add('localplugins', new admin_externalpage(
         'local_mobilemonitor_dashboard',
         get_string('nav_dashboard', 'local_mobilemonitor'),
@@ -44,9 +42,7 @@ if ($hassiteconfig) {
         'local/mobilemonitor:viewlogs'
     ));
 
-    // -------------------------------------------------------------------------
     // Settings page.
-    // -------------------------------------------------------------------------
     $settings = new admin_settingpage('local_mobilemonitor', get_string('pluginname', 'local_mobilemonitor'));
     $ADMIN->add('localplugins', $settings);
 

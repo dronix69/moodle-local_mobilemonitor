@@ -16,8 +16,6 @@
 
 namespace local_mobilemonitor\local;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Repository with the queries used by the audit panel.
  *
@@ -29,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class repository {
-
     /**
      * Builds the conditions of the listing, according to the filters.
      *
@@ -87,7 +84,7 @@ class repository {
     public static function count_events(array $filters): int {
         global $DB;
 
-        list($where, $params) = self::build_where($filters);
+        [$where, $params] = self::build_where($filters);
 
         $sql = "SELECT COUNT(l.id)
                   FROM {local_mobilemonitor_log} l
@@ -108,7 +105,7 @@ class repository {
     public static function get_events(array $filters, int $offset = 0, int $limit = 0): array {
         global $DB;
 
-        list($where, $params) = self::build_where($filters);
+        [$where, $params] = self::build_where($filters);
 
         $sql = "SELECT l.id, l.userid, l.tokenid, l.externalserviceid, l.eventtype, l.ipaddress,
                        l.tokenlastaccess, l.timecreated, l.timemodified,
@@ -134,9 +131,10 @@ class repository {
      * @param array $filters Filters of the listing.
      * @return array
      */
-    public static function get_stats(array $filters): array {        global $DB;
+    public static function get_stats(array $filters): array {
+        global $DB;
 
-        list($where, $params) = self::build_where($filters);
+        [$where, $params] = self::build_where($filters);
 
         $newsql = "SELECT l.id, l.userid, l.timecreated, l.eventtype, l.tokenlastaccess, l.timemodified
                       FROM {local_mobilemonitor_log} l
@@ -195,7 +193,7 @@ class repository {
             return ['', []];
         }
 
-        list($servicesql, $params) = $DB->get_in_or_equal($serviceids, SQL_PARAMS_NAMED, 'studentsvc');
+        [$servicesql, $params] = $DB->get_in_or_equal($serviceids, SQL_PARAMS_NAMED, 'studentsvc');
 
         $conditions = [
             "l.eventtype IN ('created', 'detected')",
@@ -288,7 +286,7 @@ class repository {
     public static function count_students(array $filters): int {
         global $DB;
 
-        list($sql, $params) = self::build_students_query($filters, true);
+        [$sql, $params] = self::build_students_query($filters, true);
         if ($sql === '') {
             return 0;
         }
@@ -307,7 +305,7 @@ class repository {
     public static function get_students(array $filters, int $offset = 0, int $limit = 0): array {
         global $DB;
 
-        list($sql, $params) = self::build_students_query($filters);
+        [$sql, $params] = self::build_students_query($filters);
         if ($sql === '') {
             return [];
         }
@@ -361,7 +359,7 @@ class repository {
             return [];
         }
 
-        list($insql, $params) = $DB->get_in_or_equal(array_map('intval', $userids), SQL_PARAMS_NAMED, 'ipuser');
+        [$insql, $params] = $DB->get_in_or_equal(array_map('intval', $userids), SQL_PARAMS_NAMED, 'ipuser');
 
         $sqlaccess = "SELECT userid, ipaddress
                         FROM {local_mobilemonitor_access}
@@ -402,7 +400,7 @@ class repository {
             return [];
         }
 
-        list($insql, $params) = $DB->get_in_or_equal($serviceids, SQL_PARAMS_NAMED, 'tokensvc');
+        [$insql, $params] = $DB->get_in_or_equal($serviceids, SQL_PARAMS_NAMED, 'tokensvc');
         $params['tuserid'] = $userid;
 
         $sql = "SELECT t.id, t.timecreated, t.lastaccess, t.validuntil,

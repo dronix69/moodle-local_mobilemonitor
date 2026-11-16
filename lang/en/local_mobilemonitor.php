@@ -207,7 +207,6 @@ $string['privacy:path:logs'] = 'Records of the monitored tokens';
 $string['privacy:path:accesses'] = 'Mobile access history';
 $string['privacy:path:alerts'] = 'Alerts of repetitive generation of tokens';
 
-// Navigation.
 $string['nav_dashboard'] = 'Audit panel';
 $string['nav_dashboard_desc'] = 'Open audit panel';
 $string['nav_students'] = 'Mobile activity by student';

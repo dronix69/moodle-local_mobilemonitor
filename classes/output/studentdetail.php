@@ -18,8 +18,6 @@ namespace local_mobilemonitor\output;
 
 use local_mobilemonitor\local\helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Renderable with the mobile activity detail of a single student.
  *
@@ -28,8 +26,9 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class studentdetail implements \renderable, \templatable {
-
     /**
+     * Constructor.
+     *
      * @param \stdClass $student Summary of the student.
      * @param \stdClass[] $tokens Tokens of the student.
      * @param \stdClass[] $ips IP addresses seen for the student.
@@ -37,11 +36,16 @@ class studentdetail implements \renderable, \templatable {
      * @param int $totalaccesses Total number of access rows.
      */
     public function __construct(
+        /** @var \stdClass $student Summary of the student. */
         protected \stdClass $student,
+        /** @var \stdClass[] $tokens Tokens of the student. */
         protected array $tokens,
+        /** @var \stdClass[] $ips IP addresses seen for the student. */
         protected array $ips,
+        /** @var \stdClass[] $accesses Access history page. */
         protected array $accesses,
-        protected int $totalaccesses
+        /** @var int $totalaccesses Total number of access rows. */
+        protected int $totalaccesses,
     ) {
     }
 
@@ -68,8 +72,10 @@ class studentdetail implements \renderable, \templatable {
                 'alternatename' => $this->student->alternatename ?? '',
             ]),
             'username' => (string) ($this->student->username ?? ''),
-            'profileurl' => (new \moodle_url('/user/view.php',
-                ['id' => (int) $this->student->userid]))->out(false),
+            'profileurl' => (new \moodle_url(
+                '/user/view.php',
+                ['id' => (int) $this->student->userid]
+            ))->out(false),
             'firsttoken' => empty($this->student->firsttoken)
                 ? get_string('notavailable', 'local_mobilemonitor')
                 : userdate((int) $this->student->firsttoken),

@@ -18,8 +18,6 @@ namespace local_mobilemonitor\form;
 
 use local_mobilemonitor\local\helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Filter form of the audit panel.
  *
@@ -28,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_form extends \moodleform {
-
     /**
      * Defines the form.
      *
@@ -37,34 +34,58 @@ class filter_form extends \moodleform {
     protected function definition() {
         $mform = $this->_form;
 
-        $mform->addElement('text', 'studentname', get_string('filter_studentname', 'local_mobilemonitor'),
-            ['size' => 30]);
+        $mform->addElement(
+            'text',
+            'studentname',
+            get_string('filter_studentname', 'local_mobilemonitor'),
+            ['size' => 30]
+        );
         $mform->setType('studentname', PARAM_TEXT);
 
-        $mform->addElement('text', 'username', get_string('filter_username', 'local_mobilemonitor'),
-            ['size' => 30]);
+        $mform->addElement(
+            'text',
+            'username',
+            get_string('filter_username', 'local_mobilemonitor'),
+            ['size' => 30]
+        );
         $mform->setType('username', PARAM_TEXT);
 
         $eventtypes = ['' => get_string('any')];
         $eventtypes[helper::EVENTTYPE_CREATED] = get_string('eventtype_created', 'local_mobilemonitor');
         $eventtypes[helper::EVENTTYPE_DETECTED] = get_string('eventtype_detected', 'local_mobilemonitor');
         $eventtypes[helper::EVENTTYPE_USED] = get_string('eventtype_used', 'local_mobilemonitor');
-        $mform->addElement('select', 'eventtype', get_string('filter_eventtype', 'local_mobilemonitor'),
-            $eventtypes);
+        $mform->addElement(
+            'select',
+            'eventtype',
+            get_string('filter_eventtype', 'local_mobilemonitor'),
+            $eventtypes
+        );
         $mform->setType('eventtype', PARAM_ALPHANUMEXT);
 
         $services = ['' => get_string('any')];
         foreach (helper::get_monitored_services() as $service) {
             $services[$service['id']] = $service['name'];
         }
-        $mform->addElement('select', 'externalserviceid', get_string('filter_service', 'local_mobilemonitor'),
-            $services);
+        $mform->addElement(
+            'select',
+            'externalserviceid',
+            get_string('filter_service', 'local_mobilemonitor'),
+            $services
+        );
         $mform->setType('externalserviceid', PARAM_INT);
 
-        $mform->addElement('date_selector', 'fromdate', get_string('filter_fromdate', 'local_mobilemonitor'),
-            ['optional' => true]);
-        $mform->addElement('date_selector', 'todate', get_string('filter_todate', 'local_mobilemonitor'),
-            ['optional' => true]);
+        $mform->addElement(
+            'date_selector',
+            'fromdate',
+            get_string('filter_fromdate', 'local_mobilemonitor'),
+            ['optional' => true]
+        );
+        $mform->addElement(
+            'date_selector',
+            'todate',
+            get_string('filter_todate', 'local_mobilemonitor'),
+            ['optional' => true]
+        );
 
         $this->add_action_buttons(true, get_string('filter_apply', 'local_mobilemonitor'));
     }

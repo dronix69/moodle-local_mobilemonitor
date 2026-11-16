@@ -18,8 +18,6 @@ namespace local_mobilemonitor\task;
 
 use local_mobilemonitor\local\helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Adhoc task that sends the administrative notifications.
  *
@@ -28,7 +26,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class send_notification_task extends \core\task\adhoc_task {
-
     /**
      * Returns the name of the task.
      *

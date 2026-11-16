@@ -19,8 +19,6 @@ namespace local_mobilemonitor;
 use local_mobilemonitor\local\helper;
 use local_mobilemonitor\task\send_notification_task;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Observer of the web service token events.
  *
@@ -35,7 +33,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class observer {
-
     /**
      * Handles the creation of a new web service token.
      *

@@ -201,7 +201,7 @@ $string['privacy:metadata:local_mobilemonitor_alert'] = 'Alertas generadas por p
 $string['privacy:metadata:local_mobilemonitor_alert:userid'] = 'Identificador del usuario al que se refiere la alerta.';
 $string['privacy:metadata:local_mobilemonitor_alert:alerttype'] = 'Tipo de la alerta.';
 $string['privacy:metadata:local_mobilemonitor_alert:fingerprint'] = 'Identificador del incidente, utilizado para evitar '
-    .'alertas duplicadas.';
+    . 'alertas duplicadas.';
 $string['privacy:metadata:local_mobilemonitor_alert:tokencount'] = 'Cantidad de tokens detectados en el periodo de evaluación.';
 $string['privacy:metadata:local_mobilemonitor_alert:timecreated'] = 'Momento en que se creó la alerta.';
 $string['privacy:metadata:local_mobilemonitor_alert:timemodified'] = 'Momento en que se actualizó la alerta por última vez.';
@@ -210,7 +210,6 @@ $string['privacy:path:logs'] = 'Registros de los tokens monitorizados';
 $string['privacy:path:accesses'] = 'Historial de accesos móviles';
 $string['privacy:path:alerts'] = 'Alertas de generación repetitiva de tokens';
 
-// Navegación.
 $string['nav_dashboard'] = 'Panel de auditoría';
 $string['nav_dashboard_desc'] = 'Abrir panel de auditoría';
 $string['nav_students'] = 'Actividad móvil por estudiante';

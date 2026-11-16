@@ -18,8 +18,6 @@ namespace local_mobilemonitor\notification;
 
 use local_mobilemonitor\local\helper;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Manager of the administrative notifications.
  *
@@ -30,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class manager {
-
     /** Capability required to receive the notifications. */
     public const CAPABILITY = 'local/mobilemonitor:viewlogs';
 
@@ -76,7 +73,7 @@ class manager {
             return [];
         }
 
-        list($insql, $params) = $DB->get_in_or_equal(array_keys($userids), SQL_PARAMS_NAMED, 'uid');
+        [$insql, $params] = $DB->get_in_or_equal(array_keys($userids), SQL_PARAMS_NAMED, 'uid');
         $users = $DB->get_records_select(
             'user',
             "id $insql AND deleted = 0 AND suspended = 0",
@@ -125,8 +122,11 @@ class manager {
         $lines[] = get_string('notification_service', 'local_mobilemonitor', $servicename);
         $lines[] = get_string('notification_time', 'local_mobilemonitor', userdate($logrecord->timecreated));
         $lines[] = get_string('notification_ip', 'local_mobilemonitor', self::format_ip($logrecord));
-        $lines[] = get_string('notification_eventtype', 'local_mobilemonitor',
-            get_string('eventtype_' . $logrecord->eventtype, 'local_mobilemonitor'));
+        $lines[] = get_string(
+            'notification_eventtype',
+            'local_mobilemonitor',
+            get_string('eventtype_' . $logrecord->eventtype, 'local_mobilemonitor')
+        );
 
         $body = implode("\n", $lines);
 

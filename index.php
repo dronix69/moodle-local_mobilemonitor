@@ -38,8 +38,10 @@ $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('pluginname', 'local_mobilemonitor'));
 $PAGE->set_heading(get_string('dashboard_title', 'local_mobilemonitor'));
-$PAGE->navbar->add(get_string('pluginname', 'local_mobilemonitor'),
-    new moodle_url('/local/mobilemonitor/index.php'));
+$PAGE->navbar->add(
+    get_string('pluginname', 'local_mobilemonitor'),
+    new moodle_url('/local/mobilemonitor/index.php')
+);
 
 $baseurl = new moodle_url('/local/mobilemonitor/index.php');
 
@@ -79,7 +81,7 @@ if ($data) {
     $filters['eventtype'] = (string) ($data->eventtype ?? '');
     $filters['externalserviceid'] = (int) ($data->externalserviceid ?? 0);
 
-    // date_selector returns a timestamp, or 0 when the optional date is disabled.
+    // The date_selector returns a timestamp, or 0 when the optional date is disabled.
     $filters['fromdate'] = max(0, (int) ($data->fromdate ?? 0));
     $todate = max(0, (int) ($data->todate ?? 0));
     $filters['todate'] = $todate ? ($todate + DAYSECS - 1) : 0;

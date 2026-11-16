@@ -38,8 +38,10 @@ $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title(get_string('students_title', 'local_mobilemonitor'));
 $PAGE->set_heading(get_string('students_title', 'local_mobilemonitor'));
-$PAGE->navbar->add(get_string('pluginname', 'local_mobilemonitor'),
-    new moodle_url('/local/mobilemonitor/index.php'));
+$PAGE->navbar->add(
+    get_string('pluginname', 'local_mobilemonitor'),
+    new moodle_url('/local/mobilemonitor/index.php')
+);
 $PAGE->navbar->add(get_string('students_title', 'local_mobilemonitor'));
 
 $baseurl = new moodle_url('/local/mobilemonitor/students.php');

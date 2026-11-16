@@ -16,8 +16,6 @@
 
 namespace local_mobilemonitor\local;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Helper class with the shared logic of the Mobile Token Monitor plugin.
  *
@@ -29,7 +27,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class helper {
-
     /** Event type: the token was created and the core event was fired. */
     public const EVENTTYPE_CREATED = 'created';
 
@@ -149,7 +146,7 @@ class helper {
             return [];
         }
 
-        list($insql, $params) = $DB->get_in_or_equal($shortnames, SQL_PARAMS_NAMED, 'shortname');
+        [$insql, $params] = $DB->get_in_or_equal($shortnames, SQL_PARAMS_NAMED, 'shortname');
         $ids = $DB->get_fieldset_select('external_services', 'id', "shortname $insql", $params);
 
         return array_map('intval', $ids);
@@ -178,7 +175,7 @@ class helper {
             return [];
         }
 
-        list($insql, $params) = $DB->get_in_or_equal($shortnames, SQL_PARAMS_NAMED, 'shortname');
+        [$insql, $params] = $DB->get_in_or_equal($shortnames, SQL_PARAMS_NAMED, 'shortname');
         $services = $DB->get_records_select('external_services', "shortname $insql", $params, 'name ASC');
 
         $result = [];
@@ -342,7 +339,7 @@ class helper {
         $period = max(1, (int) self::get_setting('periodhours')) * HOURSECS;
         $since = time() - $period;
 
-        list($insql, $inparams) = $DB->get_in_or_equal(
+        [$insql, $inparams] = $DB->get_in_or_equal(
             [self::EVENTTYPE_CREATED, self::EVENTTYPE_DETECTED],
             SQL_PARAMS_NAMED,
             'etype'
@@ -363,11 +360,13 @@ class helper {
         // does not generate duplicated alerts.
         $fingerprint = $userid . ':' . $threshold . ':' . (int) floor(time() / $period);
 
-        if ($DB->record_exists('local_mobilemonitor_alert', [
+        if (
+            $DB->record_exists('local_mobilemonitor_alert', [
             'userid' => $userid,
             'alerttype' => self::ALERT_REPETITION,
             'fingerprint' => $fingerprint,
-        ])) {
+            ])
+        ) {
             return null;
         }
 

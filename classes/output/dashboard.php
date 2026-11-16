@@ -16,8 +16,6 @@
 
 namespace local_mobilemonitor\output;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Renderable of the audit panel.
  *
@@ -26,16 +24,20 @@ defined('MOODLE_INTERNAL') || die();
  * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class dashboard implements \renderable, \templatable {
-
     /**
+     * Constructor.
+     *
      * @param array $stats Summary figures of the panel.
      * @param \stdClass[] $records Records of the audit log.
      * @param bool $hasfilters Whether any filter is applied.
      */
     public function __construct(
+        /** @var array $stats Summary figures of the panel. */
         protected array $stats,
+        /** @var \stdClass[] $records Records of the audit log. */
         protected array $records,
-        protected bool $hasfilters
+        /** @var bool $hasfilters Whether any filter is applied. */
+        protected bool $hasfilters,
     ) {
     }
 

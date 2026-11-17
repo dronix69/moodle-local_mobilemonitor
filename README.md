@@ -1,5 +1,7 @@
 # Mobile Token Monitor — Guía del administrador
 
+<img src="pix/icon.png" alt="Icono de Mobile Token Monitor" width="96" />
+
 Plugin para Moodle 4.5 que permite saber **qué usuarios generan y usan tokens de la app
 Moodle Mobile**, sin desactivar la app ni modificar el funcionamiento normal del sitio.
 

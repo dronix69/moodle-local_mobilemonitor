@@ -25,8 +25,8 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_mobilemonitor';
-$plugin->version = 2026111602;
+$plugin->version = 2026112400;
 $plugin->requires = 2024100700;
 $plugin->supported = [401, 501];
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->release = '1.1.1 (ALPHA)';
+$plugin->release = '1.1.2 (ALPHA)';

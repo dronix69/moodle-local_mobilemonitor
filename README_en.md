@@ -298,7 +298,7 @@ Yes. Turn off *Enable notifications* and the panel will keep recording the activ
 
 ## 14. Notes for the technical team
 
-- Component: `local_mobilemonitor`; version 1.1.1; requires Moodle 4.5.
+- Component: `local_mobilemonitor`; version 1.1.2; requires Moodle 4.5.
 - The service is identified by its internal identifier (*shortname*), not by its display
   name. By default the official `moodle_mobile_app` service is watched.
 - Moodle does not notify token creation from `admin/webservice/tokens.php` nor in bulk

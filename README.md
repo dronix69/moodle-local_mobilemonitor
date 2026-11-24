@@ -299,7 +299,7 @@ Sí. Desactive *Activar notificaciones* y el panel seguirá registrando la activ
 
 ## 14. Notas para el equipo técnico
 
-- Componente: `local_mobilemonitor`; versión 1.1.0; requiere Moodle 4.5.
+- Componente: `local_mobilemonitor`; versión 1.1.2; requiere Moodle 4.5.
 - El servicio se identifica por su identificador interno (*shortname*), no por su nombre
   visible. Por defecto se vigila el servicio oficial `moodle_mobile_app`.
 - Moodle no notifica la creación de tokens desde `admin/webservice/tokens.php` ni en la

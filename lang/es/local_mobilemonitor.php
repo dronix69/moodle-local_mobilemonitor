@@ -48,8 +48,7 @@ $string['column_tokens'] = 'Tokens';
 $string['column_username'] = 'Nombre de usuario';
 $string['column_validuntil'] = 'Vigente hasta';
 $string['dashboard_events'] = 'Eventos registrados';
-$string['dashboard_intro'] = 'Este panel muestra los tokens generados para los servicios web monitorizados. '
-    . 'Solo se almacenan metadatos: el secreto del token nunca es guardado por este plugin.';
+$string['dashboard_intro'] = 'Este panel muestra los tokens generados para los servicios web monitorizados. Solo se almacenan metadatos: el secreto del token nunca es guardado por este plugin.';
 $string['dashboard_stats'] = 'Resumen';
 $string['dashboard_title'] = 'Auditoría de tokens de Moodle Mobile';
 $string['errorinvalidrange'] = 'La fecha inicial debe ser anterior a la fecha final.';
@@ -65,8 +64,9 @@ $string['filter_status_any'] = 'Cualquier estado';
 $string['filter_studentname'] = 'Nombre del estudiante';
 $string['filter_todate'] = 'Hasta la fecha';
 $string['filter_username'] = 'Nombre de usuario';
-$string['local/mobilemonitor:manage'] = 'Gestionar el monitor de tokens móviles';
-$string['local/mobilemonitor:viewlogs'] = 'Ver el registro de auditoría de los tokens móviles';
+$string['messageprovider:notification'] = 'Alertas y detecciones de tokens móviles';
+$string['mobilemonitor:manage'] = 'Gestionar el monitor de tokens móviles';
+$string['mobilemonitor:viewlogs'] = 'Ver el registro de auditoría de los tokens móviles';
 $string['nav_dashboard'] = 'Panel de auditoría';
 $string['nav_dashboard_desc'] = 'Abrir panel de auditoría';
 $string['nav_students'] = 'Actividad móvil por estudiante';
@@ -77,11 +77,9 @@ $string['noips'] = 'No hay direcciones IP registradas para este estudiante.';
 $string['nostudentactivity'] = 'Este estudiante no tiene actividad móvil registrada.';
 $string['nostudents'] = 'No hay estudiantes que coincidan con los filtros seleccionados.';
 $string['notavailable'] = 'No disponible';
-$string['notification_alert_body'] = 'Se ha detectado una generación repetitiva de tokens. '
-    . 'Esta actividad requiere revisión, no implica necesariamente una vulneración.';
+$string['notification_alert_body'] = 'Se ha detectado una generación repetitiva de tokens. Esta actividad requiere revisión, no implica necesariamente una vulneración.';
 $string['notification_alert_count'] = 'Tokens generados en el periodo: {$a}';
-$string['notification_alert_disclaimer'] = 'La actividad ha sido clasificada como una actividad que requiere revisión '
-    . 'humana, nunca como un ataque confirmado.';
+$string['notification_alert_disclaimer'] = 'La actividad ha sido clasificada como una actividad que requiere revisión humana, nunca como un ataque confirmado.';
 $string['notification_alert_period'] = 'Periodo de evaluación (horas): {$a}';
 $string['notification_alert_subject'] = 'Generación repetitiva de tokens Moodle Mobile';
 $string['notification_alert_threshold'] = 'Umbral configurado: {$a}';
@@ -97,19 +95,16 @@ $string['notification_time'] = 'Fecha y hora: {$a}';
 $string['notification_username'] = 'Nombre de usuario: {$a}';
 $string['notokens'] = 'Este estudiante no tiene tokens de los servicios web monitorizados.';
 $string['pluginname'] = 'Monitor de tokens móviles';
-$string['pluginname_desc'] = 'Audita la generación y el uso de los tokens del servicio web Moodle Mobile. '
-    . 'Solo se almacenan metadatos, nunca el valor secreto del token.';
+$string['pluginname_desc'] = 'Audita la generación y el uso de los tokens del servicio web Moodle Mobile. Solo se almacenan metadatos, nunca el valor secreto del token.';
 $string['privacy:metadata:local_mobilemonitor_access'] = 'Historial agrupado de los accesos móviles de los tokens.';
 $string['privacy:metadata:local_mobilemonitor_access:externalserviceid'] = 'Identificador del servicio web utilizado.';
 $string['privacy:metadata:local_mobilemonitor_access:ipaddress'] = 'Dirección IP del acceso móvil.';
 $string['privacy:metadata:local_mobilemonitor_access:timecreated'] = 'Momento del acceso móvil.';
-$string['privacy:metadata:local_mobilemonitor_access:tokenid'] = 'Identificador del registro del token en Moodle. '
-    . 'El secreto del token nunca se almacena.';
+$string['privacy:metadata:local_mobilemonitor_access:tokenid'] = 'Identificador del registro del token en Moodle. El secreto del token nunca se almacena.';
 $string['privacy:metadata:local_mobilemonitor_access:userid'] = 'Identificador del usuario propietario del token.';
 $string['privacy:metadata:local_mobilemonitor_alert'] = 'Alertas generadas por patrones de generación repetitiva de tokens.';
 $string['privacy:metadata:local_mobilemonitor_alert:alerttype'] = 'Tipo de la alerta.';
-$string['privacy:metadata:local_mobilemonitor_alert:fingerprint'] = 'Identificador del incidente, utilizado para evitar '
-    . 'alertas duplicadas.';
+$string['privacy:metadata:local_mobilemonitor_alert:fingerprint'] = 'Identificador del incidente, utilizado para evitar alertas duplicadas.';
 $string['privacy:metadata:local_mobilemonitor_alert:timecreated'] = 'Momento en que se creó la alerta.';
 $string['privacy:metadata:local_mobilemonitor_alert:timemodified'] = 'Momento en que se actualizó la alerta por última vez.';
 $string['privacy:metadata:local_mobilemonitor_alert:tokencount'] = 'Cantidad de tokens detectados en el periodo de evaluación.';
@@ -120,39 +115,30 @@ $string['privacy:metadata:local_mobilemonitor_log:externalserviceid'] = 'Identif
 $string['privacy:metadata:local_mobilemonitor_log:ipaddress'] = 'Dirección IP de la petición que generó el token.';
 $string['privacy:metadata:local_mobilemonitor_log:timecreated'] = 'Momento en que se creó el token.';
 $string['privacy:metadata:local_mobilemonitor_log:timemodified'] = 'Momento en que se actualizó el registro por última vez.';
-$string['privacy:metadata:local_mobilemonitor_log:tokenid'] = 'Identificador del registro del token en Moodle. '
-    . 'El secreto del token nunca se almacena.';
+$string['privacy:metadata:local_mobilemonitor_log:tokenid'] = 'Identificador del registro del token en Moodle. El secreto del token nunca se almacena.';
 $string['privacy:metadata:local_mobilemonitor_log:tokenlastaccess'] = 'Último acceso conocido del token.';
 $string['privacy:metadata:local_mobilemonitor_log:userid'] = 'Identificador del usuario propietario del token.';
 $string['privacy:path:accesses'] = 'Historial de accesos móviles';
 $string['privacy:path:alerts'] = 'Alertas de generación repetitiva de tokens';
 $string['privacy:path:logs'] = 'Registros de los tokens monitorizados';
 $string['setting_alertenabled'] = 'Activar la detección de actividad repetitiva';
-$string['setting_alertenabled_desc'] = 'Detecta los usuarios que generan una cantidad anormal de tokens en un periodo corto. '
-    . 'Esta actividad requiere revisión humana, no es un ataque confirmado.';
+$string['setting_alertenabled_desc'] = 'Detecta los usuarios que generan una cantidad anormal de tokens en un periodo corto. Esta actividad requiere revisión humana, no es un ataque confirmado.';
 $string['setting_enabled'] = 'Activar la monitorización';
 $string['setting_enabled_desc'] = 'Si se desactiva, no se registra ningún token ni se envía ninguna notificación.';
 $string['setting_inactivitydays'] = 'Periodo de inactividad (días)';
-$string['setting_inactivitydays_desc'] = 'Un estudiante o un token se considera inactivo cuando no se ha utilizado durante este '
-    . 'número de días. Se usa en la auditoría de la actividad móvil y no afecta a los tokens de Moodle.';
+$string['setting_inactivitydays_desc'] = 'Un estudiante o un token se considera inactivo cuando no se ha utilizado durante este número de días. Se usa en la auditoría de la actividad móvil y no afecta a los tokens de Moodle.';
 $string['setting_notificationsenabled'] = 'Activar las notificaciones';
-$string['setting_notificationsenabled_desc'] = 'Envía una notificación a los administradores cuando se registra un token nuevo '
-    . 'o cuando se detecta una generación repetitiva de tokens.';
+$string['setting_notificationsenabled_desc'] = 'Envía una notificación a los administradores cuando se registra un token nuevo o cuando se detecta una generación repetitiva de tokens.';
 $string['setting_notificationusers'] = 'Destinatarios adicionales de las notificaciones';
-$string['setting_notificationusers_desc'] = 'Lista de identificadores de usuario separados por comas que también reciben las '
-    . 'notificaciones, además de los usuarios con la capacidad "Monitor de tokens móviles: Ver el registro de auditoría '
-    . 'de los tokens móviles".';
+$string['setting_notificationusers_desc'] = 'Lista de identificadores de usuario separados por comas que también reciben las notificaciones, además de los usuarios con la capacidad "Monitor de tokens móviles: Ver el registro de auditoría de los tokens móviles".';
 $string['setting_periodhours'] = 'Periodo de evaluación (horas)';
 $string['setting_periodhours_desc'] = 'Ventana de tiempo, en horas, utilizada para contar los tokens generados por cada usuario.';
 $string['setting_retentiondays'] = 'Retención de los registros (días)';
-$string['setting_retentiondays_desc'] = 'Los registros con más antigüedad que este número de días se eliminan en la tarea de '
-    . 'mantenimiento. Los tokens de Moodle nunca se modifican.';
+$string['setting_retentiondays_desc'] = 'Los registros con más antigüedad que este número de días se eliminan en la tarea de mantenimiento. Los tokens de Moodle nunca se modifican.';
 $string['setting_serviceshortnames'] = 'Shortnames de los servicios web monitorizados';
-$string['setting_serviceshortnames_desc'] = 'Lista de shortnames separados por comas de los servicios externos a monitorizar. '
-    . 'El servicio Moodle Mobile se identifica por su shortname real ({$a}), nunca por su nombre visible.';
+$string['setting_serviceshortnames_desc'] = 'Lista de shortnames separados por comas de los servicios externos a monitorizar. El servicio Moodle Mobile se identifica por su shortname real ({$a}), nunca por su nombre visible.';
 $string['setting_threshold'] = 'Umbral de tokens';
-$string['setting_threshold_desc'] = 'Cantidad de tokens generados por un mismo usuario en el periodo de evaluación que '
-    . 'genera una alerta.';
+$string['setting_threshold_desc'] = 'Cantidad de tokens generados por un mismo usuario en el periodo de evaluación que genera una alerta.';
 $string['stat_last24hours'] = 'Tokens creados en las últimas 24 horas';
 $string['stat_last7days'] = 'Tokens creados en los últimos 7 días';
 $string['stat_lastactivity'] = 'Última actividad registrada';
@@ -161,15 +147,12 @@ $string['stat_total_tokens'] = 'Tokens móviles registrados';
 $string['status_active'] = 'Activo';
 $string['status_inactive'] = 'Inactivo';
 $string['student_accesses'] = 'Historial de accesos';
-$string['student_intro'] = 'Historial de los tokens y accesos móviles de este estudiante. '
-    . 'Solo se almacenan metadatos, nunca el valor secreto del token.';
+$string['student_intro'] = 'Historial de los tokens y accesos móviles de este estudiante. Solo se almacenan metadatos, nunca el valor secreto del token.';
 $string['student_ips'] = 'Direcciones IP utilizadas';
 $string['student_summary'] = 'Resumen';
 $string['student_title'] = 'Actividad móvil de {$a}';
 $string['student_tokens'] = 'Tokens del estudiante';
-$string['students_intro'] = 'Estudiantes que han generado o utilizado un token de los servicios web monitorizados. '
-    . 'El estado "activo" indica que el estudiante ha utilizado la aplicación móvil dentro del periodo de inactividad '
-    . 'configurado.';
+$string['students_intro'] = 'Estudiantes que han generado o utilizado un token de los servicios web monitorizados. El estado "activo" indica que el estudiante ha utilizado la aplicación móvil dentro del periodo de inactividad configurado.';
 $string['students_link'] = 'Ver estudiantes';
 $string['students_title'] = 'Actividad móvil por estudiante';
 $string['summary_activetokens'] = 'Tokens activos';
@@ -188,7 +171,5 @@ $string['unknownservice'] = 'Servicio desconocido';
 $string['unknownuser'] = 'Usuario eliminado';
 $string['viewdetail'] = 'Ver detalle';
 $string['viewprofile'] = 'Ver el perfil de Moodle';
-$string['warning_multipleips'] = 'Este estudiante ha utilizado la aplicación móvil desde más de una dirección IP. '
-    . 'Revise el historial de accesos antes de considerarlo un incidente.';
-$string['warning_multipletokens'] = 'Este estudiante tiene más de un token activo. '
-    . 'Puede ser normal cuando la aplicación se usa en varios dispositivos.';
+$string['warning_multipleips'] = 'Este estudiante ha utilizado la aplicación móvil desde más de una dirección IP. Revise el historial de accesos antes de considerarlo un incidente.';
+$string['warning_multipletokens'] = 'Este estudiante tiene más de un token activo. Puede ser normal cuando la aplicación se usa en varios dispositivos.';

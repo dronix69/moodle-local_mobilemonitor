@@ -1,5 +1,23 @@
 # Changelog — local_mobilemonitor
 
+## 1.1.2 — 2026-11-24
+
+### Corregido
+
+- Claves de idioma de las capacidades corregidas: `local/mobilemonitor:viewlogs` y
+  `local/mobilemonitor:manage` se declaraban como `$string['local/mobilemonitor:...']`, pero
+  `get_capability_string()` resuelve `mobilemonitor:viewlogs` y `mobilemonitor:manage` dentro del
+  componente `local_mobilemonitor`. Las capacidades aparecían sin nombre legible en la interfaz.
+- Añadida la cadena `messageprovider:notification`, requerida por el proveedor de mensajes
+  declarado en `db/messages.php`; sin ella el proveedor se mostraba sin nombre en las
+  preferencias de notificación.
+- Cabecera de licencia GPL y marcadores `@copyright` / `@license` añadidos a
+  `templates/dashboard.mustache`, `templates/studentdetail.mustache`,
+  `templates/studentlist.mustache` y `styles.css`.
+- Cadenas de los archivos de idioma unidas en una sola línea: se construían con el operador `.`
+  en 17 cadenas (inglés) y 18 (español). AMOS procesa los archivos línea por línea, por lo que las
+  cadenas partidas no se registran correctamente.
+
 ## 1.1.1 — 2026-11-16
 
 ### Corregido

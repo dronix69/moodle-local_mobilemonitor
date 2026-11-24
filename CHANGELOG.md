@@ -13,7 +13,10 @@
   preferencias de notificación.
 - Cabecera de licencia GPL y marcadores `@copyright` / `@license` añadidos a
   `templates/dashboard.mustache`, `templates/studentdetail.mustache`,
-  `templates/studentlist.mustache` y `styles.css`.
+  `templates/studentlist.mustache` y `styles.css`. En las plantillas los marcadores se ubican
+  antes del bloque `Example context (json):`, porque el lint de Mustache captura todo el texto que
+  sigue a ese bloque: si los marcadores van al final, el JSON de ejemplo deja de ser válido y
+  `moodle-plugin-ci mustache` falla con "Example context JSON is unparsable".
 - Cadenas de los archivos de idioma unidas en una sola línea: se construían con el operador `.`
   en 17 cadenas (inglés) y 18 (español). AMOS procesa los archivos línea por línea, por lo que las
   cadenas partidas no se registran correctamente.
